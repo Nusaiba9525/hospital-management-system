@@ -3,11 +3,10 @@ Django settings for hospitalms project.
 """
 
 from pathlib import Path
-import os
 
 BASE_DIR = Path(__file__).resolve().parent.parent
 
-SECRET_KEY = os.environ.get("SECRET_KEY")
+SECRET_KEY = 'django-insecure-hospital-ms-dev-key-change-in-production'
 
 DEBUG = False
 

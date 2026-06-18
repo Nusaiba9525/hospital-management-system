@@ -1,0 +1,15 @@
+<div class="px-3 mb-4">
+  <h6 class="text-muted text-uppercase small fw-bold mb-3">Doctor Portal</h6>
+</div>
+<a href="{% url 'doctors:dashboard' %}" class="sidebar-link {% if request.resolver_match.url_name == 'dashboard' %}active{% endif %}">
+  <i class="bi bi-speedometer2"></i> Dashboard
+</a>
+<a href="{% url 'appointments:list' %}" class="sidebar-link">
+  <i class="bi bi-calendar-check"></i> Appointments
+</a>
+<a href="{% url 'doctors:availability' %}" class="sidebar-link">
+  <i class="bi bi-clock"></i> Availability
+</a>
+<a href="{% url 'accounts:profile' %}" class="sidebar-link">
+  <i class="bi bi-person"></i> Profile
+</a>

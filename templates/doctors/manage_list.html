@@ -1,0 +1,32 @@
+{% extends 'base_dashboard.html' %}
+{% block title %}Manage Doctors — MedCare Admin{% endblock %}
+{% block sidebar %}{% include 'partials/sidebar_admin.html' %}{% endblock %}
+{% block dashboard_content %}
+<div class="page-header d-flex justify-content-between align-items-start">
+  <div><h1>Manage Doctors</h1><p>Add, edit, or remove doctors</p></div>
+  <a href="{% url 'doctors:create' %}" class="btn btn-medical"><i class="bi bi-plus-lg me-1"></i>Add Doctor</a>
+</div>
+<div class="med-card">
+  <div class="table-responsive">
+    <table class="table table-medical mb-0">
+      <thead><tr><th>Name</th><th>Department</th><th>Specialization</th><th>Status</th><th>Actions</th></tr></thead>
+      <tbody>
+        {% for doctor in doctors %}
+        <tr>
+          <td>Dr. {{ doctor.full_name }}</td>
+          <td>{{ doctor.department.name|default:"—" }}</td>
+          <td>{{ doctor.specialization }}</td>
+          <td>{% if doctor.is_available %}<span class="badge bg-success-subtle text-success">Available</span>{% else %}<span class="badge bg-secondary">Unavailable</span>{% endif %}</td>
+          <td>
+            <a href="{% url 'doctors:update' doctor.pk %}" class="btn btn-sm btn-medical-outline">Edit</a>
+            <a href="{% url 'doctors:delete' doctor.pk %}" class="btn btn-sm btn-outline-danger">Delete</a>
+          </td>
+        </tr>
+        {% empty %}
+        <tr><td colspan="5" class="text-center text-muted py-4">No doctors yet. <a href="{% url 'doctors:create' %}">Add one</a>.</td></tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+</div>
+{% endblock %}

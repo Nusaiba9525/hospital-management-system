@@ -1,0 +1,44 @@
+{% extends 'base_dashboard.html' %}
+{% block title %}Book Appointment — MedCare{% endblock %}
+{% block sidebar %}{% include 'partials/sidebar_patient.html' %}{% endblock %}
+{% block dashboard_content %}
+<div class="page-header">
+  <h1>Book Appointment</h1>
+  <p>Schedule a visit with one of our specialists</p>
+</div>
+<div class="row">
+  <div class="col-lg-8">
+    <div class="med-card p-4">
+      <form method="post">
+        {% csrf_token %}
+        {% if form.non_field_errors %}<div class="alert alert-danger">{{ form.non_field_errors }}</div>{% endif %}
+        <div class="mb-3">
+          <label class="form-label fw-semibold">Select Doctor</label>
+          {{ form.doctor }}
+        </div>
+        <div class="row">
+          <div class="col-md-6 mb-3">
+            <label class="form-label fw-semibold">Date</label>
+            {{ form.date }}
+          </div>
+          <div class="col-md-6 mb-3">
+            <label class="form-label fw-semibold">Time</label>
+            {{ form.time }}
+          </div>
+        </div>
+        <div class="mb-3">
+          <label class="form-label fw-semibold">Available Slots</label>
+          <div id="available-slots" class="p-3 bg-light rounded">
+            <p class="text-muted small mb-0">Select doctor and date to see available slots.</p>
+          </div>
+        </div>
+        <div class="mb-4">
+          <label class="form-label fw-semibold">Reason for Visit</label>
+          {{ form.reason }}
+        </div>
+        <button type="submit" class="btn btn-medical">Submit Booking Request</button>
+      </form>
+    </div>
+  </div>
+</div>
+{% endblock %}

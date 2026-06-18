@@ -1,0 +1,71 @@
+{% extends 'base_dashboard.html' %}
+{% block title %}Appointments — MedCare{% endblock %}
+{% block sidebar %}
+  {% if user.is_admin_user %}{% include 'partials/sidebar_admin.html' %}
+  {% elif user.is_doctor_user %}{% include 'partials/sidebar_doctor.html' %}
+  {% else %}{% include 'partials/sidebar_patient.html' %}{% endif %}
+{% endblock %}
+{% block dashboard_content %}
+<div class="page-header d-flex justify-content-between align-items-start flex-wrap gap-2">
+  <div><h1>Appointments</h1><p>View and manage all appointments</p></div>
+  {% if user.is_patient_user %}<a href="{% url 'appointments:book' %}" class="btn btn-medical btn-sm">Book New</a>{% endif %}
+</div>
+
+<div class="med-card p-3 mb-4">
+  <form method="get" class="d-flex gap-2 flex-wrap">
+    <select name="status" class="form-select" style="max-width: 200px;">
+      <option value="">All Statuses</option>
+      {% for val, label in status_choices %}
+      <option value="{{ val }}" {% if status_filter == val %}selected{% endif %}>{{ label }}</option>
+      {% endfor %}
+    </select>
+    <button type="submit" class="btn btn-medical-outline btn-sm">Filter</button>
+  </form>
+</div>
+
+<div class="med-card">
+  {% if appointments %}
+  <div class="table-responsive">
+    <table class="table table-medical mb-0">
+      <thead>
+        <tr>
+          {% if user.is_admin_user or user.is_doctor_user %}<th>Patient</th>{% endif %}
+          {% if user.is_admin_user or user.is_patient_user %}<th>Doctor</th>{% endif %}
+          <th>Date & Time</th>
+          <th>Reason</th>
+          <th>Status</th>
+          <th>Actions</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for apt in appointments %}
+        <tr>
+          {% if user.is_admin_user or user.is_doctor_user %}
+          <td>{{ apt.patient.get_full_name|default:apt.patient.username }}</td>
+          {% endif %}
+          {% if user.is_admin_user or user.is_patient_user %}
+          <td>Dr. {{ apt.doctor.full_name }}</td>
+          {% endif %}
+          <td>{{ apt.date|date:"M d, Y" }}<br><small class="text-muted">{{ apt.time|time:"g:i A" }}</small></td>
+          <td class="small">{{ apt.reason|truncatewords:8|default:"—" }}</td>
+          <td><span class="badge-status badge-{{ apt.status }}">{{ apt.get_status_display }}</span></td>
+          <td>
+            {% if user.is_doctor_user and apt.status == 'pending' %}
+            <form method="post" action="{% url 'appointments:quick_action' apt.pk 'approve' %}" class="d-inline">{% csrf_token %}<button class="btn btn-sm btn-success">✓</button></form>
+            <form method="post" action="{% url 'appointments:quick_action' apt.pk 'reject' %}" class="d-inline">{% csrf_token %}<button class="btn btn-sm btn-outline-danger">✗</button></form>
+            {% elif user.is_doctor_user and apt.status == 'approved' %}
+            <a href="{% url 'appointments:prescription' apt.pk %}" class="btn btn-sm btn-teal">Rx</a>
+            {% elif user.is_patient_user and apt.prescription %}
+            <a href="{% url 'appointments:prescription_pdf' apt.pk %}" class="btn btn-sm btn-medical-outline" target="_blank">PDF</a>
+            {% else %}—{% endif %}
+          </td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+  {% else %}
+  <div class="empty-state"><i class="bi bi-calendar-x d-block"></i><p>No appointments found.</p></div>
+  {% endif %}
+</div>
+{% endblock %}

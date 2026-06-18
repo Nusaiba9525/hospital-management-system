@@ -1,0 +1,83 @@
+{% extends 'base_dashboard.html' %}
+{% block title %}Admin Dashboard — MedCare{% endblock %}
+{% block sidebar %}{% include 'partials/sidebar_admin.html' %}{% endblock %}
+{% block dashboard_content %}
+<div class="page-header d-flex justify-content-between align-items-start flex-wrap gap-2">
+  <div>
+    <h1>Admin Dashboard</h1>
+    <p>System overview and analytics</p>
+  </div>
+  <span class="badge bg-primary-subtle text-primary px-3 py-2">{{ today_appointments }} appointments today</span>
+</div>
+
+<div class="row g-4 mb-4">
+  <div class="col-sm-6 col-xl-3">
+    <div class="stat-card primary">
+      <div class="stat-value">{{ total_patients }}</div>
+      <div class="stat-label"><i class="bi bi-people me-1"></i>Total Patients</div>
+    </div>
+  </div>
+  <div class="col-sm-6 col-xl-3">
+    <div class="stat-card teal">
+      <div class="stat-value">{{ total_doctors }}</div>
+      <div class="stat-label"><i class="bi bi-person-badge me-1"></i>Total Doctors</div>
+    </div>
+  </div>
+  <div class="col-sm-6 col-xl-3">
+    <div class="stat-card green">
+      <div class="stat-value">{{ total_appointments }}</div>
+      <div class="stat-label"><i class="bi bi-calendar-check me-1"></i>Appointments</div>
+    </div>
+  </div>
+  <div class="col-sm-6 col-xl-3">
+    <div class="stat-card amber">
+      <div class="stat-value">{{ pending_appointments }}</div>
+      <div class="stat-label"><i class="bi bi-hourglass-split me-1"></i>Pending</div>
+    </div>
+  </div>
+</div>
+
+<div class="row g-4">
+  <div class="col-lg-8">
+    <div class="med-card">
+      <div class="p-3 border-bottom d-flex justify-content-between align-items-center">
+        <h5 class="fw-bold mb-0">Recent Appointments</h5>
+        <a href="{% url 'appointments:list' %}" class="btn btn-sm btn-medical-outline">View All</a>
+      </div>
+      {% if recent_appointments %}
+      <div class="table-responsive">
+        <table class="table table-medical mb-0">
+          <thead><tr><th>Patient</th><th>Doctor</th><th>Date</th><th>Status</th></tr></thead>
+          <tbody>
+            {% for apt in recent_appointments %}
+            <tr>
+              <td>{{ apt.patient.get_full_name|default:apt.patient.username }}</td>
+              <td>Dr. {{ apt.doctor.full_name }}</td>
+              <td>{{ apt.date|date:"M d, Y" }}</td>
+              <td><span class="badge-status badge-{{ apt.status }}">{{ apt.get_status_display }}</span></td>
+            </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+      {% else %}
+      <div class="empty-state"><i class="bi bi-calendar-x d-block"></i><p>No appointments yet.</p></div>
+      {% endif %}
+    </div>
+  </div>
+  <div class="col-lg-4">
+    <div class="med-card p-4">
+      <h5 class="fw-bold mb-3">Departments</h5>
+      {% for dept in departments %}
+      <div class="d-flex justify-content-between align-items-center mb-2 pb-2 border-bottom">
+        <span>{{ dept.name }}</span>
+        <span class="badge bg-light text-dark">{{ dept.doctor_count }} doctors</span>
+      </div>
+      {% empty %}
+      <p class="text-muted small">No departments configured.</p>
+      {% endfor %}
+      <a href="{% url 'doctors:department_create' %}" class="btn btn-teal btn-sm w-100 mt-3">Add Department</a>
+    </div>
+  </div>
+</div>
+{% endblock %}

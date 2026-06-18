@@ -1,0 +1,62 @@
+{% extends 'base_dashboard.html' %}
+{% block title %}Patient Dashboard — MedCare{% endblock %}
+{% block sidebar %}{% include 'partials/sidebar_patient.html' %}{% endblock %}
+{% block dashboard_content %}
+<div class="page-header d-flex justify-content-between align-items-start flex-wrap gap-2">
+  <div>
+    <h1>Welcome, {{ user.first_name|default:user.username }}</h1>
+    <p>Manage your appointments and health records</p>
+  </div>
+  <a href="{% url 'appointments:book' %}" class="btn btn-medical"><i class="bi bi-calendar-plus me-1"></i>Book Appointment</a>
+</div>
+
+<div class="row g-4 mb-4">
+  <div class="col-md-4"><div class="stat-card primary"><div class="stat-value">{{ stats.total }}</div><div class="stat-label">Total Appointments</div></div></div>
+  <div class="col-md-4"><div class="stat-card amber"><div class="stat-value">{{ stats.pending }}</div><div class="stat-label">Pending</div></div></div>
+  <div class="col-md-4"><div class="stat-card green"><div class="stat-value">{{ stats.approved }}</div><div class="stat-label">Approved</div></div></div>
+</div>
+
+<div class="row g-4">
+  <div class="col-lg-7">
+    <div class="med-card">
+      <div class="p-3 border-bottom d-flex justify-content-between"><h5 class="fw-bold mb-0">My Appointments</h5><a href="{% url 'appointments:list' %}" class="small">View all</a></div>
+      {% if appointments %}
+      <div class="table-responsive">
+        <table class="table table-medical mb-0">
+          <thead><tr><th>Doctor</th><th>Date</th><th>Status</th></tr></thead>
+          <tbody>
+            {% for apt in appointments %}
+            <tr>
+              <td>Dr. {{ apt.doctor.full_name }}</td>
+              <td>{{ apt.date|date:"M d, Y" }} {{ apt.time|time:"g:i A" }}</td>
+              <td><span class="badge-status badge-{{ apt.status }}">{{ apt.get_status_display }}</span></td>
+            </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+      {% else %}
+      <div class="empty-state"><i class="bi bi-calendar-plus d-block"></i><p>No appointments yet.</p><a href="{% url 'appointments:book' %}" class="btn btn-medical btn-sm">Book Your First Appointment</a></div>
+      {% endif %}
+    </div>
+  </div>
+  <div class="col-lg-5">
+    <div class="med-card p-4">
+      <h5 class="fw-bold mb-3"><i class="bi bi-file-medical me-2"></i>Prescriptions</h5>
+      {% if prescriptions %}
+      {% for apt in prescriptions %}
+      <div class="d-flex justify-content-between align-items-center mb-3 pb-3 border-bottom">
+        <div>
+          <strong>Dr. {{ apt.doctor.full_name }}</strong>
+          <div class="text-muted small">{{ apt.date|date:"M d, Y" }}</div>
+        </div>
+        <a href="{% url 'appointments:prescription_pdf' apt.pk %}" class="btn btn-sm btn-medical-outline" target="_blank"><i class="bi bi-download"></i> PDF</a>
+      </div>
+      {% endfor %}
+      {% else %}
+      <p class="text-muted small mb-0">Prescriptions will appear here after completed visits.</p>
+      {% endif %}
+    </div>
+  </div>
+</div>
+{% endblock %}

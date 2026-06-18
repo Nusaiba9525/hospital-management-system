@@ -1,0 +1,21 @@
+<div class="px-3 mb-4">
+  <h6 class="text-muted text-uppercase small fw-bold mb-3">Admin Panel</h6>
+</div>
+<a href="{% url 'core:admin_dashboard' %}" class="sidebar-link {% if request.resolver_match.url_name == 'admin_dashboard' %}active{% endif %}">
+  <i class="bi bi-speedometer2"></i> Overview
+</a>
+<a href="{% url 'appointments:list' %}" class="sidebar-link">
+  <i class="bi bi-calendar-check"></i> Appointments
+</a>
+<a href="{% url 'doctors:manage_list' %}" class="sidebar-link">
+  <i class="bi bi-person-badge"></i> Manage Doctors
+</a>
+<a href="{% url 'doctors:department_list' %}" class="sidebar-link">
+  <i class="bi bi-building"></i> Departments
+</a>
+<a href="{% url 'core:admin_users' %}" class="sidebar-link">
+  <i class="bi bi-people"></i> Users
+</a>
+<a href="{% url 'core:home' %}" class="sidebar-link">
+  <i class="bi bi-house"></i> Back to Site
+</a>

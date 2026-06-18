@@ -1,0 +1,18 @@
+<div class="px-3 mb-4">
+  <h6 class="text-muted text-uppercase small fw-bold mb-3">Patient Portal</h6>
+</div>
+<a href="{% url 'patients:dashboard' %}" class="sidebar-link {% if request.resolver_match.url_name == 'dashboard' %}active{% endif %}">
+  <i class="bi bi-speedometer2"></i> Dashboard
+</a>
+<a href="{% url 'appointments:book' %}" class="sidebar-link">
+  <i class="bi bi-calendar-plus"></i> Book Appointment
+</a>
+<a href="{% url 'appointments:list' %}" class="sidebar-link">
+  <i class="bi bi-calendar-check"></i> My Appointments
+</a>
+<a href="{% url 'doctors:list' %}" class="sidebar-link">
+  <i class="bi bi-person-badge"></i> Find Doctors
+</a>
+<a href="{% url 'accounts:profile' %}" class="sidebar-link">
+  <i class="bi bi-person"></i> Profile
+</a>

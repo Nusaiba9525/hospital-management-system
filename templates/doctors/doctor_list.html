@@ -1,0 +1,52 @@
+{% extends 'base.html' %}
+{% block title %}Our Doctors — MedCare Hospital{% endblock %}
+{% block content %}
+<section class="section-padding pt-5">
+  <div class="container">
+    <div class="text-center mb-5">
+      <h1 class="section-title">Find a Doctor</h1>
+      <p class="section-subtitle">Search by name, specialization, or department.</p>
+    </div>
+    <div class="med-card p-3 mb-4">
+      <form method="get" class="row g-2">
+        <div class="col-md-5">
+          <input type="text" name="q" class="form-control" placeholder="Search doctors..." value="{{ search_query }}">
+        </div>
+        <div class="col-md-4">
+          <select name="department" class="form-select">
+            <option value="">All Departments</option>
+            {% for dept in departments %}
+            <option value="{{ dept.pk }}" {% if selected_department == dept.pk|stringformat:"s" %}selected{% endif %}>{{ dept.name }}</option>
+            {% endfor %}
+          </select>
+        </div>
+        <div class="col-md-3">
+          <button type="submit" class="btn btn-medical w-100">Search</button>
+        </div>
+      </form>
+    </div>
+    <div class="row g-4">
+      {% for doctor in doctors %}
+      <div class="col-md-6 col-lg-4">
+        <div class="med-card doctor-card h-100">
+          <div class="doctor-avatar">{{ doctor.user.first_name|first|default:doctor.user.username|first|upper }}</div>
+          <h5 class="fw-bold">Dr. {{ doctor.full_name }}</h5>
+          <p class="specialty">{{ doctor.specialization }}</p>
+          <p class="text-muted small">{{ doctor.department.name|default:"General Medicine" }}</p>
+          <div class="d-flex justify-content-center gap-2 mb-3">
+            <span class="badge bg-light text-dark"><i class="bi bi-star-fill text-warning"></i> {{ doctor.rating }}</span>
+            <span class="badge bg-light text-dark">{{ doctor.experience_years }} yrs exp.</span>
+          </div>
+          <a href="{% url 'doctors:detail' doctor.pk %}" class="btn btn-medical-outline btn-sm">View Profile</a>
+          {% if user.is_authenticated and user.is_patient_user %}
+          <a href="{% url 'appointments:book' %}?doctor={{ doctor.pk }}" class="btn btn-medical btn-sm ms-1">Book</a>
+          {% endif %}
+        </div>
+      </div>
+      {% empty %}
+      <div class="col-12"><div class="empty-state"><i class="bi bi-person-badge d-block"></i><p>No doctors found matching your criteria.</p></div></div>
+      {% endfor %}
+    </div>
+  </div>
+</section>
+{% endblock %}

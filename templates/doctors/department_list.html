@@ -1,0 +1,23 @@
+{% extends 'base_dashboard.html' %}
+{% block title %}Departments — MedCare Admin{% endblock %}
+{% block sidebar %}{% include 'partials/sidebar_admin.html' %}{% endblock %}
+{% block dashboard_content %}
+<div class="page-header d-flex justify-content-between align-items-start">
+  <div><h1>Departments</h1><p>Manage hospital departments</p></div>
+  <a href="{% url 'doctors:department_create' %}" class="btn btn-medical btn-sm">Add Department</a>
+</div>
+<div class="row g-4">
+  {% for dept in departments %}
+  <div class="col-md-6 col-lg-4">
+    <div class="med-card p-4">
+      <div class="service-icon"><i class="bi bi-{{ dept.icon }}"></i></div>
+      <h5 class="fw-bold">{{ dept.name }}</h5>
+      <p class="text-muted small">{{ dept.description|truncatewords:15|default:"No description." }}</p>
+      <a href="{% url 'doctors:department_update' dept.pk %}" class="btn btn-sm btn-medical-outline">Edit</a>
+    </div>
+  </div>
+  {% empty %}
+  <div class="col-12"><div class="empty-state"><p>No departments yet.</p></div></div>
+  {% endfor %}
+</div>
+{% endblock %}

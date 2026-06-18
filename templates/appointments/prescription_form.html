@@ -1,0 +1,20 @@
+{% extends 'base_dashboard.html' %}
+{% block title %}Prescription — MedCare{% endblock %}
+{% block sidebar %}{% include 'partials/sidebar_doctor.html' %}{% endblock %}
+{% block dashboard_content %}
+<div class="page-header">
+  <h1>Add Prescription</h1>
+  <p>Patient: {{ object.patient.get_full_name|default:object.patient.username }} — {{ object.date|date:"M d, Y" }}</p>
+</div>
+<div class="col-lg-8">
+  <div class="med-card p-4">
+    <form method="post">
+      {% csrf_token %}
+      <div class="mb-3"><label class="form-label fw-semibold">Prescription</label>{{ form.prescription }}</div>
+      <div class="mb-4"><label class="form-label fw-semibold">Doctor Notes</label>{{ form.notes }}</div>
+      <button type="submit" class="btn btn-medical">Save & Complete Visit</button>
+      <a href="{% url 'doctors:dashboard' %}" class="btn btn-medical-outline ms-2">Cancel</a>
+    </form>
+  </div>
+</div>
+{% endblock %}

@@ -1,0 +1,48 @@
+{% extends 'base_dashboard.html' %}
+{% block title %}Availability — MedCare{% endblock %}
+{% block sidebar %}{% include 'partials/sidebar_doctor.html' %}{% endblock %}
+{% block dashboard_content %}
+<div class="page-header"><h1>Manage Availability</h1><p>Set your weekly schedule and slot duration</p></div>
+<div class="row g-4">
+  <div class="col-lg-5">
+    <div class="med-card p-4">
+      <h5 class="fw-bold mb-3">Add Time Slot</h5>
+      <form method="post">
+        {% csrf_token %}
+        {% for field in form %}
+        <div class="mb-3"><label class="form-label">{{ field.label }}</label>{{ field }}</div>
+        {% endfor %}
+        <button type="submit" class="btn btn-medical">Add Slot</button>
+      </form>
+    </div>
+  </div>
+  <div class="col-lg-7">
+    <div class="med-card">
+      <div class="p-3 border-bottom"><h5 class="fw-bold mb-0">Current Schedule</h5></div>
+      {% if schedules %}
+      <div class="table-responsive">
+        <table class="table table-medical mb-0">
+          <thead><tr><th>Day</th><th>Hours</th><th>Duration</th><th></th></tr></thead>
+          <tbody>
+            {% for s in schedules %}
+            <tr>
+              <td>{{ s.get_day_of_week_display }}</td>
+              <td>{{ s.start_time|time:"g:i A" }} — {{ s.end_time|time:"g:i A" }}</td>
+              <td>{{ s.slot_duration }} min</td>
+              <td>
+                <form method="post" action="{% url 'doctors:availability_delete' s.pk %}">{% csrf_token %}
+                  <button class="btn btn-sm btn-outline-danger"><i class="bi bi-trash"></i></button>
+                </form>
+              </td>
+            </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+      {% else %}
+      <div class="empty-state py-4"><p class="mb-0">No availability set. Add your first time slot.</p></div>
+      {% endif %}
+    </div>
+  </div>
+</div>
+{% endblock %}

@@ -1,0 +1,45 @@
+<footer class="footer-medical">
+  <div class="container">
+    <div class="row g-4">
+      <div class="col-lg-4">
+        <h5><i class="bi bi-heart-pulse-fill text-info me-2"></i>MedCare Hospital</h5>
+        <p class="small">Compassionate care, advanced medicine. Your health is our highest priority — trusted by thousands of patients.</p>
+        <div class="d-flex gap-3 mt-3">
+          <a href="#"><i class="bi bi-facebook fs-5"></i></a>
+          <a href="#"><i class="bi bi-twitter-x fs-5"></i></a>
+          <a href="#"><i class="bi bi-instagram fs-5"></i></a>
+        </div>
+      </div>
+      <div class="col-6 col-lg-2">
+        <h5>Quick Links</h5>
+        <ul class="list-unstyled small">
+          <li class="mb-2"><a href="{% url 'core:home' %}">Home</a></li>
+          <li class="mb-2"><a href="{% url 'doctors:list' %}">Our Doctors</a></li>
+          <li class="mb-2"><a href="{% url 'appointments:book' %}">Book Appointment</a></li>
+          <li class="mb-2"><a href="{% url 'accounts:register' %}">Patient Portal</a></li>
+        </ul>
+      </div>
+      <div class="col-6 col-lg-3">
+        <h5>Departments</h5>
+        <ul class="list-unstyled small">
+          <li class="mb-2"><a href="#">Cardiology</a></li>
+          <li class="mb-2"><a href="#">Neurology</a></li>
+          <li class="mb-2"><a href="#">Pediatrics</a></li>
+          <li class="mb-2"><a href="#">Orthopedics</a></li>
+        </ul>
+      </div>
+      <div class="col-lg-3">
+        <h5>Contact</h5>
+        <ul class="list-unstyled small">
+          <li class="mb-2"><i class="bi bi-geo-alt me-2"></i>123 Medical Drive, Health City</li>
+          <li class="mb-2"><i class="bi bi-telephone me-2"></i>+1 (555) 123-4567</li>
+          <li class="mb-2"><i class="bi bi-envelope me-2"></i>info@medcarehospital.com</li>
+          <li><i class="bi bi-clock me-2"></i>24/7 Emergency Services</li>
+        </ul>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <p class="mb-0">&copy; {% now "Y" %} MedCare Hospital. All rights reserved.</p>
+    </div>
+  </div>
+</footer>

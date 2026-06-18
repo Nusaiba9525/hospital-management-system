@@ -1,0 +1,78 @@
+{% extends 'base_dashboard.html' %}
+{% block title %}Doctor Dashboard — MedCare{% endblock %}
+{% block sidebar %}{% include 'partials/sidebar_doctor.html' %}{% endblock %}
+{% block dashboard_content %}
+<div class="page-header d-flex justify-content-between align-items-start flex-wrap gap-2">
+  <div>
+    <h1>Welcome, Dr. {{ doctor.full_name }}</h1>
+    <p>{{ doctor.specialization }} — {{ doctor.department.name|default:"General" }}</p>
+  </div>
+  <a href="{% url 'doctors:availability' %}" class="btn btn-medical-outline btn-sm"><i class="bi bi-clock me-1"></i>Manage Availability</a>
+</div>
+
+<div class="row g-4 mb-4">
+  <div class="col-md-4">
+    <div class="stat-card primary"><div class="stat-value">{{ today_appointments|length }}</div><div class="stat-label">Today's Appointments</div></div>
+  </div>
+  <div class="col-md-4">
+    <div class="stat-card amber"><div class="stat-value">{{ pending_count }}</div><div class="stat-label">Pending Approval</div></div>
+  </div>
+  <div class="col-md-4">
+    <div class="stat-card teal"><div class="stat-value">{{ total_patients }}</div><div class="stat-label">Total Patients</div></div>
+  </div>
+</div>
+
+<div class="row g-4">
+  <div class="col-lg-6">
+    <div class="med-card">
+      <div class="p-3 border-bottom"><h5 class="fw-bold mb-0">Today's Schedule</h5></div>
+      {% if today_appointments %}
+      <div class="list-group list-group-flush">
+        {% for apt in today_appointments %}
+        <div class="list-group-item d-flex justify-content-between align-items-center">
+          <div>
+            <strong>{{ apt.patient.get_full_name|default:apt.patient.username }}</strong>
+            <div class="text-muted small">{{ apt.time|time:"g:i A" }} — {{ apt.reason|truncatewords:8 }}</div>
+          </div>
+          <span class="badge-status badge-{{ apt.status }}">{{ apt.get_status_display }}</span>
+        </div>
+        {% endfor %}
+      </div>
+      {% else %}
+      <div class="empty-state py-4"><i class="bi bi-calendar-check d-block"></i><p class="mb-0">No appointments today.</p></div>
+      {% endif %}
+    </div>
+  </div>
+  <div class="col-lg-6">
+    <div class="med-card">
+      <div class="p-3 border-bottom"><h5 class="fw-bold mb-0">Upcoming Appointments</h5></div>
+      {% if upcoming_appointments %}
+      <div class="table-responsive">
+        <table class="table table-medical mb-0">
+          <thead><tr><th>Patient</th><th>Date</th><th>Status</th><th>Actions</th></tr></thead>
+          <tbody>
+            {% for apt in upcoming_appointments %}
+            <tr>
+              <td>{{ apt.patient.get_full_name|default:apt.patient.username }}</td>
+              <td>{{ apt.date|date:"M d" }} {{ apt.time|time:"g:i A" }}</td>
+              <td><span class="badge-status badge-{{ apt.status }}">{{ apt.get_status_display }}</span></td>
+              <td>
+                {% if apt.status == 'pending' %}
+                <form method="post" action="{% url 'appointments:quick_action' apt.pk 'approve' %}" class="d-inline">{% csrf_token %}<button class="btn btn-sm btn-success">Approve</button></form>
+                <form method="post" action="{% url 'appointments:quick_action' apt.pk 'reject' %}" class="d-inline">{% csrf_token %}<button class="btn btn-sm btn-outline-danger">Reject</button></form>
+                {% elif apt.status == 'approved' %}
+                <a href="{% url 'appointments:prescription' apt.pk %}" class="btn btn-sm btn-teal">Prescription</a>
+                {% endif %}
+              </td>
+            </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+      {% else %}
+      <div class="empty-state py-4"><p class="mb-0">No upcoming appointments.</p></div>
+      {% endif %}
+    </div>
+  </div>
+</div>
+{% endblock %}

@@ -1,0 +1,43 @@
+{% extends 'base_dashboard.html' %}
+{% block title %}{% if is_edit %}Edit{% else %}Add{% endif %} Doctor — MedCare{% endblock %}
+{% block sidebar %}{% include 'partials/sidebar_admin.html' %}{% endblock %}
+{% block dashboard_content %}
+<div class="page-header"><h1>{% if is_edit %}Edit Doctor{% else %}Add New Doctor{% endif %}</h1></div>
+<div class="col-lg-8">
+  <div class="med-card p-4">
+    <form method="post">
+      {% csrf_token %}
+      <h5 class="fw-bold mb-3">Account Details</h5>
+      <div class="row">
+        <div class="col-md-6 mb-3"><label class="form-label">Username</label>{{ form.username }}</div>
+        <div class="col-md-6 mb-3"><label class="form-label">Email</label>{{ form.email }}</div>
+      </div>
+      <div class="row">
+        <div class="col-md-6 mb-3"><label class="form-label">First Name</label>{{ form.first_name }}</div>
+        <div class="col-md-6 mb-3"><label class="form-label">Last Name</label>{{ form.last_name }}</div>
+      </div>
+      <div class="row">
+        <div class="col-md-6 mb-3"><label class="form-label">Phone</label>{{ form.phone }}</div>
+        <div class="col-md-6 mb-3"><label class="form-label">Password {% if is_edit %}(optional){% endif %}</label>{{ form.password }}</div>
+      </div>
+      <hr class="my-4">
+      <h5 class="fw-bold mb-3">Professional Details</h5>
+      <div class="row">
+        <div class="col-md-6 mb-3"><label class="form-label">Department</label>{{ form.department }}</div>
+        <div class="col-md-6 mb-3"><label class="form-label">Specialization</label>{{ form.specialization }}</div>
+      </div>
+      <div class="row">
+        <div class="col-md-6 mb-3"><label class="form-label">Qualification</label>{{ form.qualification }}</div>
+        <div class="col-md-6 mb-3"><label class="form-label">Experience (years)</label>{{ form.experience_years }}</div>
+      </div>
+      <div class="mb-3"><label class="form-label">Bio</label>{{ form.bio }}</div>
+      <div class="row">
+        <div class="col-md-6 mb-3"><label class="form-label">Consultation Fee ($)</label>{{ form.consultation_fee }}</div>
+        <div class="col-md-6 mb-3 d-flex align-items-end"><div class="form-check">{{ form.is_available }} <label class="form-check-label">Available for appointments</label></div></div>
+      </div>
+      <button type="submit" class="btn btn-medical">Save Doctor</button>
+      <a href="{% url 'doctors:manage_list' %}" class="btn btn-medical-outline ms-2">Cancel</a>
+    </form>
+  </div>
+</div>
+{% endblock %}

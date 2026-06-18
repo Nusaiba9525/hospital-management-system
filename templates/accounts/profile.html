@@ -1,0 +1,74 @@
+{% extends 'base_dashboard.html' %}
+{% block title %}Profile — MedCare{% endblock %}
+{% block sidebar %}
+  {% if user.is_admin_user %}{% include 'partials/sidebar_admin.html' %}
+  {% elif user.is_doctor_user %}{% include 'partials/sidebar_doctor.html' %}
+  {% else %}{% include 'partials/sidebar_patient.html' %}{% endif %}
+{% endblock %}
+{% block dashboard_content %}
+<div class="page-header">
+  <h1>My Profile</h1>
+  <p>Manage your personal information</p>
+</div>
+<div class="row">
+  <div class="col-lg-8">
+    <div class="med-card p-4">
+      <form method="post">
+        {% csrf_token %}
+        <h5 class="fw-bold mb-3">Personal Information</h5>
+        <div class="row">
+          <div class="col-md-6 mb-3">
+            <label class="form-label">First Name</label>
+            {{ form.first_name }}
+          </div>
+          <div class="col-md-6 mb-3">
+            <label class="form-label">Last Name</label>
+            {{ form.last_name }}
+          </div>
+        </div>
+        <div class="mb-3">
+          <label class="form-label">Email</label>
+          {{ form.email }}
+        </div>
+        <div class="row">
+          <div class="col-md-6 mb-3">
+            <label class="form-label">Phone</label>
+            {{ form.phone }}
+          </div>
+          <div class="col-md-6 mb-3">
+            <label class="form-label">Date of Birth</label>
+            {{ form.date_of_birth }}
+          </div>
+        </div>
+        <div class="mb-3">
+          <label class="form-label">Address</label>
+          {{ form.address }}
+        </div>
+        {% if patient_form %}
+        <hr class="my-4">
+        <h5 class="fw-bold mb-3">Medical Information</h5>
+        <div class="row">
+          <div class="col-md-6 mb-3">
+            <label class="form-label">Blood Group</label>
+            {{ patient_form.blood_group }}
+          </div>
+          <div class="col-md-6 mb-3">
+            <label class="form-label">Emergency Contact</label>
+            {{ patient_form.emergency_contact }}
+          </div>
+        </div>
+        <div class="mb-3">
+          <label class="form-label">Medical History</label>
+          {{ patient_form.medical_history }}
+        </div>
+        <div class="mb-3">
+          <label class="form-label">Allergies</label>
+          {{ patient_form.allergies }}
+        </div>
+        {% endif %}
+        <button type="submit" class="btn btn-medical">Save Changes</button>
+      </form>
+    </div>
+  </div>
+</div>
+{% endblock %}
